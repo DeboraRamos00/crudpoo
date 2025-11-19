@@ -11,4 +11,25 @@ class BancoDados:
             os.makedirs("data")
 
         if not os.path.exists(CAMINHO_ARQUIVO):
-            with open
+            with open(CAMINHO_ARQUIVO, "W") as f:
+                json.dump([], f)
+
+    def carregar(self):
+        with open(CAMINHO_ARQUIVO, "r") as f:
+            dados = json.load(f)
+
+        contas = []
+        for c in dados:
+            if c["tipo"] == "ContaCorrente":
+                contas.append(
+                    ContaCorrente(c["numero"], c["titular"], c["saldo"], c["limite"])
+                )
+            else:
+                contas.append(
+                    Conta(c["numero"], c["titular"], c["saldo"])
+                )
+        return contas
+    def salvar(self, contas):
+        dados = [c.to_dict() for c in contas]
+        with open(CAMINHO_ARQUIVO, "W")  as f:
+            json.dump(dados, f, ident=4)
